@@ -12,3 +12,24 @@ outputs/*
 **/__pycache__
 venv/
 OMRChecker.wiki/
+
+# EDUSCANAI-DADOS-LOCAIS
+.DS_Store
+__pycache__/
+*.py[cod]
+*.db
+*.sqlite
+*.sqlite3
+*.zip
+
+/inputs/
+/outputs/
+/_processing/
+/_batch_processing/
+/_batch_upload/
+
+avaliacao_web/data/*
+!avaliacao_web/data/.gitkeep
+avaliacao_web/**/_processing/
+avaliacao_web/**/_batch_processing/
+avaliacao_web/**/_batch_upload/
