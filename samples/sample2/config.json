@@ -6,9 +6,9 @@
     "processing_width": 666
   },
   "outputs": {
-    "show_image_level": 5
+    "show_image_level": 0
   },
-  "pdf_params": {                                                         
-      "pdf_page": "1-2"
+  "pdf_params": {
+    "pdf_page": "1-2"
   }
 }

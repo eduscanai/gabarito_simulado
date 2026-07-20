@@ -9,9 +9,7 @@
     "show_image_level": 0
   },
   "pdf_params": {
-    "pdf_page": [
-      1,
-      2
-    ]
+    "pdf_page": 1,
+    "pdf_dpi": 300
   }
 }

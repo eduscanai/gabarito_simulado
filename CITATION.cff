@@ -1,0 +1,9 @@
+cf-version: 1.2.0
+title: "Corretor OMR Local"
+message: "Ao utilizar este software em trabalho acadêmico, cite este repositório."
+type: software
+authors:
+  - family-names: "Barbosa"
+    given-names: "Filipe de Oliveira"
+version: 0.23.0
+date-released: 2026-07-20

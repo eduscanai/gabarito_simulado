@@ -1,32 +1,29 @@
-# How to contribute
-So you want to write code and get it landed in the official OMRChecker repository?
-First, fork our repository into your own GitHub account, and create a local clone of it as described in the installation instructions.
-The latter will be used to get new features implemented or bugs fixed.
+# Contribuindo
 
-Once done and you have the code locally on the disk, you can get started. We advise you to not work directly on the master branch,
-but to create a separate branch for each issue you are working on. That way you can easily switch between different work,
-and you can update each one for the latest changes on the upstream master individually.
+## Preparação
 
+1. crie uma branch a partir de `main`;
+2. configure o ambiente conforme `docs/INSTALACAO.md`;
+3. não use dados reais de alunos em testes ou commits;
+4. execute `pytest`, `ruff check tests scripts` e `python scripts/check_repository.py` antes de abrir o pull request.
 
-# Writing Code
-For writing the code just follow the [Pep8 Python style](https://peps.python.org/pep-0008/) guide, If there is something unclear about the style, just look at existing code which might help you to understand it better.
+## Padrão de commits
 
-Also, try to use commits with [conventional messages](https://www.conventionalcommits.org/en/v1.0.0/#summary).
+Use mensagens curtas e descritivas, por exemplo:
 
-
-# Code Formatting
-Before committing your code, make sure to run the following command to format your code according to the PEP8 style guide:
-```.sh
-pip install -r requirements.dev.txt && pre-commit install
+```text
+feat: adiciona importação de alunos por CSV
+fix: corrige recorte da matrícula em scans inclinados
+docs: atualiza guia de instalação no Windows
 ```
 
-Run `pre-commit` before committing your changes:
-```.sh
-git add .
-pre-commit run -a
-```
+## Dados de teste
 
-# Where to contribute from
+Use apenas dados fictícios. Não inclua:
 
-- You can pickup any open [issues](https://github.com/Udayraj123/OMRChecker/issues) to solve.
-- You can also check out the [ideas list](https://github.com/users/Udayraj123/projects/2/views/1)
+- nomes reais de alunos;
+- matrículas reais;
+- provas digitalizadas;
+- notas;
+- banco `corretor.db`;
+- arquivos dentro de `avaliacao_web/data/`.

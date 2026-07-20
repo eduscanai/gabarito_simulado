@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Criador de avaliações OMR</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="/">← Avaliações</a>
+    <div class="brand-copy">
+      <p class="eyebrow">OMRChecker</p>
+      <h1>Criar avaliação objetiva</h1>
+      <p class="subtitle">Defina o gabarito e gere a folha de respostas para anexar à prova.</p>
+    </div>
+    <span class="status-badge" id="statusBadge">Rascunho</span>
+  </header>
+
+  <main class="workspace">
+    <section class="preview-panel card">
+      <div class="panel-heading">
+        <div>
+          <h2>Prévia da folha</h2>
+          <p>O PDF final será A4 e terá marcadores compatíveis com o OMRChecker.</p>
+        </div>
+        <span class="preview-count" id="previewCount">10 questões</span>
+      </div>
+
+      <div class="sheet-stage">
+        <div class="answer-sheet-preview">
+          <span class="corner-marker top-left"></span>
+          <span class="corner-marker top-right"></span>
+          <span class="corner-marker bottom-left"></span>
+          <span class="corner-marker bottom-right"></span>
+
+          <h2 id="previewTitle">Nova avaliação</h2>
+
+          <div class="student-fields">
+            <span>Nome: ____________________________________</span>
+            <span>Matrícula: __________________</span>
+          </div>
+
+          <p class="sheet-instruction">
+            Preencha completamente apenas uma alternativa em cada questão.
+          </p>
+
+          <div id="sheetQuestions" class="sheet-questions"></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="form-panel card">
+      <div class="panel-heading compact">
+        <div>
+          <h2>Configuração</h2>
+          <p>Escolha a estrutura e marque a resposta correta.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <label class="field wide">
+          <span>Título da avaliação</span>
+          <input id="titleInput" type="text" placeholder="Ex.: Cálculo I — Prova 1">
+        </label>
+
+        <label class="field">
+          <span>Questões</span>
+          <input id="questionCount" type="number" min="1" max="100" value="10">
+        </label>
+
+        <label class="field">
+          <span>Alternativas padrão</span>
+          <select id="defaultOptions">
+            <option value="2">2 alternativas</option>
+            <option value="3">3 alternativas</option>
+            <option value="4">4 alternativas</option>
+            <option value="5" selected>5 alternativas</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Valor por questão</span>
+          <input id="pointsPerQuestion" type="number" min="0.01" step="0.01" value="1">
+        </label>
+
+        <button type="button" id="buildQuestions" class="secondary-button">
+          Atualizar questões
+        </button>
+      </div>
+
+      <div class="marking-toolbar">
+        <button type="button" id="previousQuestion" class="icon-button" aria-label="Questão anterior">←</button>
+        <strong id="currentQuestionLabel">Questão 1</strong>
+        <div id="currentOptions" class="option-row"></div>
+        <button type="button" id="nextQuestion" class="icon-button" aria-label="Próxima questão">→</button>
+      </div>
+
+      <div class="form-scroll">
+        <div class="answer-summary">
+          <span><strong id="answeredCount">0</strong> respondidas</span>
+          <span><strong id="remainingCount">10</strong> pendentes</span>
+        </div>
+
+        <div id="questionsGrid" class="questions-grid"></div>
+
+        <section id="resultsPanel" class="results-panel" hidden>
+          <h3>Avaliação criada</h3>
+          <p id="resultId"></p>
+          <div class="download-grid">
+            <a id="downloadSheet" target="_blank" rel="noopener">Folha para imprimir</a>
+            <a id="downloadSolution" target="_blank" rel="noopener">Solução em PDF</a>
+            <a id="downloadZip">Pacote completo</a>
+            <a id="downloadKey" target="_blank" rel="noopener">Gabarito JSON</a>
+            <a id="downloadTemplate" target="_blank" rel="noopener">Template OMR</a>
+            <a id="openAssessment" class="primary-link">Abrir página da avaliação</a>
+          </div>
+        </section>
+      </div>
+
+      <div class="save-area">
+        <button type="button" id="saveAssessment" class="primary-button">
+          Salvar e gerar arquivos
+        </button>
+        <p id="formMessage" class="form-message" role="status"></p>
+      </div>
+    </aside>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

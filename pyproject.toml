@@ -1,18 +1,19 @@
-[tool.black]
-exclude = '''
-(
-  /(
-      \.eggs         # exclude a few common directories in the
-    | \.git          # root of the project
-    | \.venv
-    | _build
-    | build
-    | dist
-  )/
-  | foo.py           # also separately exclude a file named foo.py in
-                     # the root of the project
-)
-'''
-include = '\.pyi?$'
-line-length = 88
-target-version = ['py37']
+[project]
+name = "corretor-omr-local"
+version = "0.23.0"
+description = "Aplicação local para criação e correção de avaliações OMR com FastAPI, SQLite e OCR."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = ["external", "avaliacao_web/data"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]

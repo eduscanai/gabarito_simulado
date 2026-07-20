@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detalhes da avaliação</title>
+  <link rel="stylesheet" href="/static/avaliacao.css?v=23">
+</head>
+<body>
+  <header class="topbar">
+    <a class="back-link" href="/">← Avaliações</a>
+    <div class="header-title">
+      <p class="eyebrow">Painel da avaliação</p>
+      <h1 id="assessmentTitle">Carregando avaliação...</h1>
+    </div>
+    <div class="header-actions">
+      <a id="downloadSheet" class="header-button" target="_blank" rel="noopener">Folha</a>
+      <a id="downloadBatchSheet" class="header-button header-button-accent" target="_blank" rel="noopener" hidden>Folha com blocos de matrícula</a>
+      <a id="downloadSolution" class="header-button" target="_blank" rel="noopener">Solução</a>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <section id="pageLoading" class="page-state">
+      <div class="spinner"></div>
+      <strong>Carregando informações da avaliação...</strong>
+    </section>
+
+    <section id="pageError" class="page-state error-state" hidden>
+      <div class="state-icon">!</div>
+      <strong>Não foi possível abrir a avaliação</strong>
+      <span id="pageErrorMessage">O servidor não retornou os dados esperados.</span>
+      <div class="state-actions">
+        <button id="retryButton" type="button">Tentar novamente</button>
+        <a href="/">Voltar para avaliações</a>
+      </div>
+    </section>
+
+    <div id="pageContent" class="page-content" hidden>
+      <section class="summary-section">
+        <article class="summary-card">
+          <span>Questões</span>
+          <strong id="questionCount">—</strong>
+        </article>
+        <article class="summary-card">
+          <span>Alunos</span>
+          <strong id="studentCount">—</strong>
+        </article>
+        <article class="summary-card success">
+          <span>Corrigidas</span>
+          <strong id="correctedCount">—</strong>
+        </article>
+        <article class="summary-card warning">
+          <span>Pendentes</span>
+          <strong id="pendingCount">—</strong>
+        </article>
+        <article class="summary-card">
+          <span>Média</span>
+          <strong id="averageScore">—</strong>
+        </article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel students-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Alunos</h2>
+              <p>Anexe a folha de respostas preenchida de cada aluno.</p>
+            </div>
+            <div class="students-tools">
+              <label id="batchUploadLabel" class="batch-upload-label">
+                <span id="batchUploadText">Corrigir lote</span>
+                <input id="batchUploadInput" type="file" multiple
+                  accept="application/pdf,image/png,image/jpeg,.pdf,.png,.jpg,.jpeg">
+              </label>
+              <span class="subtle-note">A matrícula será reconhecida pelos blocos; casos duvidosos irão para revisão.</span>
+              <label class="search-field">
+                <span>Buscar</span>
+                <input id="studentSearch" type="search" placeholder="Nome ou matrícula">
+              </label>
+            </div>
+          </div>
+
+          <section id="batchReport" class="batch-report" hidden>
+            <div class="batch-report-header">
+              <div>
+                <strong id="batchReportTitle">Resultado do lote</strong>
+                <span id="batchReportSummary"></span>
+              </div>
+              <button id="closeBatchReport" type="button" aria-label="Fechar resultado">×</button>
+            </div>
+            <div id="batchReportItems" class="batch-report-items"></div>
+          </section>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aluno</th>
+                  <th>Status</th>
+                  <th>Resultado</th>
+                  <th>Folha</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTable"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <aside class="panel result-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Informações do aluno</h2>
+              <p id="resultSubtitle">Selecione um aluno na lista.</p>
+            </div>
+          </div>
+
+          <div id="emptyResult" class="empty-result">
+            <div class="empty-icon">👤</div>
+            <strong>Nenhum aluno selecionado</strong>
+            <span>Clique sobre o nome ou sobre a linha de um aluno.</span>
+          </div>
+
+          <div id="studentInfoContent" class="student-info-content" hidden>
+            <div class="student-result-header">
+              <div>
+                <span id="infoStudentId"></span>
+                <h3 id="infoStudentName"></h3>
+              </div>
+              <span id="infoStatus" class="status-pill pending">Pendente</span>
+            </div>
+
+            <div class="student-file-card">
+              <div>
+                <span class="section-label">Folha anexada</span>
+                <strong id="attachedFileName">Nenhuma folha anexada</strong>
+                <p id="attachedFileDescription">
+                  Anexe um PDF, PNG, JPG ou JPEG para corrigir esta avaliação.
+                </p>
+              </div>
+
+              <div id="attachedFileLinks" class="file-links" hidden>
+                <a id="openOriginalFile" target="_blank" rel="noopener">Abrir original</a>
+                <a id="openProcessedFile" target="_blank" rel="noopener">Abrir processada</a>
+              </div>
+            </div>
+
+            <label id="sideUploadLabel" class="side-upload-label">
+              <span id="sideUploadText">Anexar folha do aluno</span>
+              <input id="sideUploadInput" type="file"
+                accept="application/pdf,image/png,image/jpeg,.pdf,.png,.jpg,.jpeg">
+            </label>
+
+            <div id="pendingStudentMessage" class="pending-student-message">
+              <strong>Este aluno ainda não possui prova anexada.</strong>
+              <span>Use o botão acima para enviar a folha preenchida.</span>
+            </div>
+
+            <div id="resultContent" class="result-content embedded-result" hidden>
+              <div class="score-box result-score-box">
+                <strong id="resultScore"></strong>
+                <span id="resultPercentage"></span>
+              </div>
+
+              <div class="result-metrics">
+                <article><span>Acertos</span><strong id="resultCorrect"></strong></article>
+                <article><span>Erros</span><strong id="resultErrors"></strong></article>
+                <article><span>Em branco</span><strong id="resultBlank"></strong></article>
+              </div>
+
+              <h4>Questões</h4>
+              <div id="questionResults" class="question-results"></div>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script>
+    window.ASSESSMENT_ID = __ASSESSMENT_ID_JSON__;
+  </script>
+  <script src="/static/avaliacao.js?v=23"></script>
+</body>
+</html>

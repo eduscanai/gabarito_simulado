@@ -1,0 +1,28 @@
+corretor-omr-local/
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   ├── workflows/python-check.yml
+│   ├── CODEOWNERS
+│   └── PULL_REQUEST_TEMPLATE.md
+├── avaliacao_web/
+│   ├── data/
+│   ├── static/
+│   ├── app.py
+│   ├── config.py
+│   ├── database.py
+│   ├── database_cli.py
+│   ├── models.py
+│   └── repository.py
+├── docs/
+├── external/
+├── scripts/              # setup, execução, backup e checagens
+├── tests/
+├── .env.example
+├── .gitignore
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── NOTICE.md
+├── README.md
+├── ROADMAP.md
+├── SECURITY.md
+└── requirements.txt

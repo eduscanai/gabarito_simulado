@@ -1,0 +1,32 @@
+{
+  "id": "teste-página-individual-20260716-214113-b396f0",
+  "title": "Teste página individual",
+  "created_at": "2026-07-16T21:41:13",
+  "question_count": 2,
+  "points_per_question": 1.0,
+  "maximum_score": 2.0,
+  "questions": [
+    {
+      "number": 1,
+      "option_count": 4,
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "answer": "A"
+    },
+    {
+      "number": 2,
+      "option_count": 4,
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "answer": "B"
+    }
+  ]
+}
