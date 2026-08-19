@@ -4,7 +4,7 @@
 
 O OMRChecker identifica as alternativas preenchidas depois que a folha é
 recortada e alinhada pelos quatro marcadores. A aplicação gera, para cada
-avaliação:
+simulado:
 
 - `template.json`;
 - `config.json`;

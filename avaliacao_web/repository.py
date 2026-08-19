@@ -122,7 +122,7 @@ def sync_assessment_directory(
             session.add(assessment)
 
         assessment.title = str(
-            assessment_data.get("title", "Avaliação sem título")
+            assessment_data.get("title", "Simulado sem título")
         )
         assessment.question_count = as_int(
             assessment_data.get(

@@ -29,7 +29,7 @@ OMR_ROOT = BASE_DIR.parent
 
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-app = FastAPI(title="Criador de avaliações OMR")
+app = FastAPI(title="Gerador de Simulados")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.mount("/arquivos", StaticFiles(directory=DATA_DIR), name="arquivos")
 
@@ -55,10 +55,10 @@ def validate_payload(payload: dict[str, Any]) -> tuple[str, list[dict[str, Any]]
     points = payload.get("points_per_question", 1)
 
     if not title:
-        raise HTTPException(400, "Informe o título da avaliação.")
+        raise HTTPException(400, "Informe o título do simulado.")
 
     if not isinstance(questions, list) or not 1 <= len(questions) <= 100:
-        raise HTTPException(400, "A avaliação deve ter entre 1 e 100 questões.")
+        raise HTTPException(400, "O simulado deve ter entre 1 e 100 questões.")
 
     try:
         points_float = float(points)
@@ -439,7 +439,7 @@ def locate_assessment(assessment_id: str) -> Path:
     assessment_dir = DATA_DIR / safe_id
 
     if not assessment_dir.exists() or not assessment_dir.is_dir():
-        raise HTTPException(404, "Avaliação não encontrada.")
+        raise HTTPException(404, "Simulado não encontrado.")
 
     return assessment_dir
 
@@ -448,7 +448,7 @@ def get_student_record(students_data: dict[str, Any], student_id: str) -> dict[s
     for student in students_data.get("students", []):
         if student.get("id") == student_id:
             return student
-    raise HTTPException(404, "Aluno não encontrado nesta avaliação.")
+    raise HTTPException(404, "Aluno não encontrado neste simulado.")
 
 
 def parse_omr_csv(results_dir: Path) -> dict[str, str]:
@@ -671,7 +671,7 @@ async def list_assessments() -> dict[str, Any]:
     except OSError as exc:
         raise HTTPException(
             500,
-            f"Não foi possível acessar a pasta de avaliações: {exc}",
+            f"Não foi possível acessar a pasta de simulados: {exc}",
         ) from exc
 
     for assessment_dir in directory_entries:
@@ -724,7 +724,7 @@ async def list_assessments() -> dict[str, Any]:
         assessments.append(
             {
                 "id": assessment.get("id", assessment_dir.name),
-                "title": assessment.get("title", "Avaliação sem título"),
+                "title": assessment.get("title", "Simulado sem título"),
                 "created_at": assessment.get("created_at"),
                 "question_count": assessment.get("question_count", 0),
                 "points_per_question": assessment.get("points_per_question", 0),
@@ -854,7 +854,7 @@ async def create_assessment(
 
     return {
         "id": assessment_id,
-        "message": "Avaliação criada corretamente.",
+        "message": "Simulado criado corretamente.",
         "details_url": f"/avaliacoes/{assessment_id}",
         "downloads": {
             "answer_sheet": f"{base_url}/folha_respostas.pdf",
@@ -878,7 +878,7 @@ async def get_assessment(assessment_id: str) -> dict[str, Any]:
 
     students_path = assessment_dir / "alunos.json"
 
-    # Migração automática para avaliações criadas em versões anteriores.
+    # Migração automática para simulados criados em versões anteriores.
     if not students_path.exists():
         create_students_file(students_path)
 

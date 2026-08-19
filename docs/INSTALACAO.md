@@ -20,7 +20,7 @@ Clone o repositório e execute o instalador:
 
 ```bash
 git clone <URL-DO-SEU-REPOSITORIO>
-cd corretor-omr-local
+cd gerador-de-simulados
 bash scripts/setup_macos.sh
 ```
 
@@ -51,7 +51,7 @@ Depois:
 
 ```bash
 git clone <URL-DO-SEU-REPOSITORIO>
-cd corretor-omr-local
+cd gerador-de-simulados
 bash scripts/setup_linux.sh
 bash scripts/run_linux.sh
 ```
@@ -66,7 +66,7 @@ bash scripts/run_linux.sh
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
 .\scripts\setup_windows.ps1
-.\scriptsun_windows.ps1
+.\scripts\run_windows.ps1
 ```
 
 ## 5. Instalação sobre uma cópia existente do OMRChecker

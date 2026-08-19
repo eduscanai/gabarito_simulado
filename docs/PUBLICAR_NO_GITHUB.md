@@ -20,7 +20,7 @@ git init
 git branch -M main
 git add .
 git status
-git commit -m "chore: organiza versão inicial do corretor OMR"
+git commit -m "chore: organiza versão inicial do gerador de simulados"
 ```
 
 ## 3. Criar o repositório remoto
@@ -39,7 +39,7 @@ git push -u origin main
 Com GitHub CLI:
 
 ```bash
-gh repo create corretor-omr-local --private --source=. --remote=origin --push
+gh repo create gerador-de-simulados --private --source=. --remote=origin --push
 ```
 
 ## 4. Antes de tornar público

@@ -1,7 +1,7 @@
 [project]
-name = "corretor-omr-local"
+name = "gerador-de-simulados"
 version = "0.23.0"
-description = "Aplicação local para criação e correção de avaliações OMR com FastAPI, SQLite e OCR."
+description = "Aplicação local para criação e correção de simulados OMR com FastAPI, SQLite e OCR."
 requires-python = ">=3.11"
 
 [tool.pytest.ini_options]

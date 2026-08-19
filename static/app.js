@@ -194,7 +194,7 @@ function previewColumns(questionCount) {
 }
 
 function renderSheetPreview() {
-  const title = el.titleInput.value.trim() || "Nova avaliação";
+  const title = el.titleInput.value.trim() || "Novo simulado";
   el.previewTitle.textContent = title;
   el.previewCount.textContent = `${state.questions.length} questões`;
   el.sheetQuestions.replaceChildren();
@@ -260,7 +260,7 @@ function setMessage(message, type = "") {
 
 function validateForm() {
   if (!el.titleInput.value.trim()) {
-    return "Informe o título da avaliação.";
+    return "Informe o título do simulado.";
   }
 
   const missing = state.questions
@@ -312,7 +312,7 @@ async function saveAssessment() {
     const result = await response.json();
 
     if (!response.ok) {
-      throw new Error(result.detail || "Não foi possível criar a avaliação.");
+      throw new Error(result.detail || "Não foi possível criar o simulado.");
     }
 
     el.resultId.textContent = `ID: ${result.id}`;

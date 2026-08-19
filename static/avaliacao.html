@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Detalhes da avaliação</title>
+  <title>Detalhes do simulado</title>
   <link rel="stylesheet" href="/static/avaliacao.css?v=8">
 </head>
 <body>
   <header class="topbar">
-    <a class="back-link" href="/">← Avaliações</a>
+    <a class="back-link" href="/">← Simulados</a>
     <div class="header-title">
-      <p class="eyebrow">Painel da avaliação</p>
-      <h1 id="assessmentTitle">Carregando avaliação...</h1>
+      <p class="eyebrow">Painel do simulado</p>
+      <h1 id="assessmentTitle">Carregando simulado...</h1>
     </div>
     <div class="header-actions">
       <a id="downloadSheet" class="header-button" target="_blank" rel="noopener">Folha</a>
@@ -22,16 +22,16 @@
   <main class="dashboard">
     <section id="pageLoading" class="page-state">
       <div class="spinner"></div>
-      <strong>Carregando informações da avaliação...</strong>
+      <strong>Carregando informações do simulado...</strong>
     </section>
 
     <section id="pageError" class="page-state error-state" hidden>
       <div class="state-icon">!</div>
-      <strong>Não foi possível abrir a avaliação</strong>
+      <strong>Não foi possível abrir o simulado</strong>
       <span id="pageErrorMessage">O servidor não retornou os dados esperados.</span>
       <div class="state-actions">
         <button id="retryButton" type="button">Tentar novamente</button>
-        <a href="/">Voltar para avaliações</a>
+        <a href="/">Voltar para simulados</a>
       </div>
     </section>
 

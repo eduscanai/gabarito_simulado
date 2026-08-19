@@ -1,6 +1,6 @@
-# Corretor OMR Local
+# Gerador de Simulados
 
-Aplicação web local para criar avaliações objetivas, gerar folhas de respostas,
+Aplicação web local para criar simulados objetivos, gerar folhas de respostas,
 processar marcações com o **OMRChecker**, reconhecer matrículas escritas em
 blocos com **Tesseract OCR** e registrar os resultados em **SQLite**.
 
@@ -12,7 +12,7 @@ blocos com **Tesseract OCR** e registrar os resultados em **SQLite**.
 
 ## Recursos atuais
 
-- criação de avaliações com 2 a 5 alternativas por questão;
+- criação de simulados com 2 a 5 alternativas por questão;
 - pesos uniformes ou peso por questão;
 - geração de folha de respostas e solução;
 - folha padrão com matrícula escrita em dez blocos;
@@ -47,7 +47,7 @@ Pré-requisitos: Git, Python 3.11 ou superior, Homebrew e Tesseract.
 ```bash
 brew install tesseract
 git clone <URL-DO-SEU-REPOSITORIO>
-cd corretor-omr-local
+cd gerador-de-simulados
 bash scripts/setup_macos.sh
 bash scripts/run_macos.sh
 ```
@@ -63,7 +63,7 @@ Veja a instalação completa em [docs/INSTALACAO.md](docs/INSTALACAO.md).
 ## Estrutura
 
 ```text
-corretor-omr-local/
+gerador-de-simulados/
 ├── avaliacao_web/        # aplicação FastAPI
 ├── docs/                 # documentação técnica e de uso
 ├── scripts/              # instalação, execução, backup e diagnóstico

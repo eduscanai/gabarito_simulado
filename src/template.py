@@ -246,6 +246,9 @@ class FieldBlock:
         )
         self.origin = origin
         self.bubble_dimensions = bubble_dimensions
+        self.bubbles_gap = bubbles_gap
+        self.direction = direction
+        self.labels_gap = labels_gap
         self.calculate_block_dimensions(
             bubble_dimensions,
             bubble_values,

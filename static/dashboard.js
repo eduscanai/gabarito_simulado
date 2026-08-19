@@ -120,7 +120,7 @@ function createAssessmentCard(assessment) {
   titleWrap.className = "card-title";
 
   const title = document.createElement("h3");
-  title.textContent = assessment.title || "Avaliação sem título";
+  title.textContent = assessment.title || "Simulado sem título";
 
   const date = document.createElement("span");
   date.textContent = formatDate(assessment.created_at);
@@ -195,7 +195,7 @@ function createAssessmentCard(assessment) {
   const openLink = document.createElement("a");
   openLink.className = "open-button";
   openLink.href = assessment.details_url;
-  openLink.textContent = "Abrir avaliação";
+  openLink.textContent = "Abrir simulado";
 
   const sheetLink = document.createElement("a");
   sheetLink.href = assessment.downloads.answer_sheet;
@@ -232,7 +232,7 @@ function renderAssessments() {
     message.style.gridColumn = "1 / -1";
 
     const strong = document.createElement("strong");
-    strong.textContent = "Nenhuma avaliação encontrada";
+    strong.textContent = "Nenhumo simulado encontrada";
 
     const span = document.createElement("span");
     span.textContent = "Tente alterar a busca ou o filtro selecionado.";
@@ -273,7 +273,7 @@ async function fetchJsonWithTimeout(url, timeoutMs = 12000) {
 
     if (!response.ok) {
       throw new Error(
-        result.detail || `Erro ${response.status} ao carregar avaliações.`
+        result.detail || `Erro ${response.status} ao carregar simulados.`
       );
     }
 
@@ -301,7 +301,7 @@ async function loadAssessments() {
     const result = await fetchJsonWithTimeout("/api/avaliacoes");
 
     if (!Array.isArray(result.assessments) || !result.summary) {
-      throw new Error("A resposta da API de avaliações está incompleta.");
+      throw new Error("A resposta da API de simulados está incompleta.");
     }
 
     state.data = result;
@@ -309,7 +309,7 @@ async function loadAssessments() {
     renderAssessments();
   } catch (error) {
     el.errorMessage.textContent =
-      error.message || "Erro desconhecido ao carregar as avaliações.";
+      error.message || "Erro desconhecido ao carregar as simulados.";
     setView("error");
     showToast(el.errorMessage.textContent, "error");
   } finally {

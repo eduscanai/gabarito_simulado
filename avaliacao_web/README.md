@@ -1,4 +1,4 @@
-# Criador e corretor de avaliações OMR - versão 23
+# Gerador de Simulados - versão 23
 
 ## Correção em lote por matrícula escrita em blocos
 
@@ -7,7 +7,7 @@ A versão 23 ativa o envio em lote e combina duas leituras locais:
 - **Tesseract OCR** para reconhecer os algarismos escritos nos blocos da matrícula;
 - **OMRChecker** para reconhecer as alternativas e calcular a nota.
 
-Depois da leitura, a aplicação procura a matrícula na lista da avaliação ou no
+Depois da leitura, a aplicação procura a matrícula na lista do simulado ou no
 SQLite, associa a folha ao aluno, salva o resultado e atualiza a nota.
 
 ## Formatos aceitos

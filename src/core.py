@@ -29,6 +29,81 @@ class ImageInstanceOps:
         self.tuning_config = tuning_config
         self.save_image_level = tuning_config.outputs.save_image_level
 
+    @staticmethod
+    def _bubble_measurement_padding(
+        box_w: int,
+        box_h: int,
+        field_block: Any,
+    ) -> tuple[int, int]:
+        """Return a safe padding window around a bubble.
+
+        The goal is to read slightly beyond the drawn circle so oversized
+        pencil or pen marks are still captured, while capping the window so
+        adjacent bubbles do not bleed too much into each other.
+        """
+
+        base_pad_x = max(1, int(round(box_w * 0.28)))
+        base_pad_y = max(1, int(round(box_h * 0.28)))
+
+        direction = getattr(field_block, "direction", "horizontal")
+        bubbles_gap = float(getattr(field_block, "bubbles_gap", box_w))
+        labels_gap = float(getattr(field_block, "labels_gap", box_h))
+
+        if direction == "vertical":
+            x_gap = labels_gap
+            y_gap = bubbles_gap
+        else:
+            x_gap = bubbles_gap
+            y_gap = labels_gap
+
+        max_pad_x = max(0, int(round((x_gap - box_w) / 2)))
+        max_pad_y = max(0, int(round((y_gap - box_h) / 2)))
+
+        pad_x = min(base_pad_x, max_pad_x)
+        pad_y = min(base_pad_y, max_pad_y)
+
+        return pad_x, pad_y
+
+    @staticmethod
+    def _bubble_measurement_score(
+        img: Any,
+        bubble: Any,
+        box_w: int,
+        box_h: int,
+        field_block: Any,
+    ) -> float:
+        """Measure a bubble using a slightly expanded, center-weighted window."""
+
+        pad_x, pad_y = ImageInstanceOps._bubble_measurement_padding(
+            box_w,
+            box_h,
+            field_block,
+        )
+
+        x0 = max(0, int(round(bubble.x + field_block.shift - pad_x)))
+        y0 = max(0, int(round(bubble.y - pad_y)))
+        x1 = min(img.shape[1], int(round(bubble.x + field_block.shift + box_w + pad_x)))
+        y1 = min(img.shape[0], int(round(bubble.y + box_h + pad_y)))
+
+        crop = img[y0:y1, x0:x1]
+        if crop.size == 0:
+            return 255.0
+
+        if crop.ndim == 3:
+            crop = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+
+        crop = crop.astype(np.float32)
+        if crop.shape[0] < 2 or crop.shape[1] < 2:
+            return float(np.mean(crop))
+
+        sigma_x = max(crop.shape[1] / 4.0, 1.0)
+        sigma_y = max(crop.shape[0] / 4.0, 1.0)
+        weights_x = cv2.getGaussianKernel(crop.shape[1], sigma_x)
+        weights_y = cv2.getGaussianKernel(crop.shape[0], sigma_y)
+        weights = weights_y @ weights_x.T
+
+        return float(np.sum(crop * weights) / np.sum(weights))
+
     def apply_preprocessors(self, file_path, in_omr, template):
         tuning_config = self.tuning_config
         # resize to conform to template
@@ -221,12 +296,14 @@ class ImageInstanceOps:
                 for field_block_bubbles in field_block.traverse_bubbles:
                     q_strip_vals = []
                     for pt in field_block_bubbles:
-                        # shifted
-                        x, y = (pt.x + field_block.shift, pt.y)
-                        rect = [y, y + box_h, x, x + box_w]
                         q_strip_vals.append(
-                            cv2.mean(img[rect[0] : rect[1], rect[2] : rect[3]])[0]
-                            # detectCross(img, rect) ? 100 : 0
+                            self._bubble_measurement_score(
+                                img,
+                                pt,
+                                box_w,
+                                box_h,
+                                field_block,
+                            )
                         )
                     q_std_vals.append(round(np.std(q_strip_vals), 2))
                     all_q_strip_arrs.append(q_strip_vals)
@@ -335,6 +412,7 @@ class ImageInstanceOps:
                                 int(1 + 3.5 * TEXT_SIZE),
                             )
                         else:
+                            x, y = (bubble.x + field_block.shift, bubble.y)
                             cv2.rectangle(
                                 final_marked,
                                 (int(x + box_w / 10), int(y + box_h / 10)),

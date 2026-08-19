@@ -1,6 +1,6 @@
 # Segurança
 
-Este projeto manipula dados acadêmicos e imagens de avaliações. Não publique
+Este projeto manipula dados acadêmicos e imagens de simulados. Não publique
 bancos, provas, matrículas ou notas em issues, commits ou pull requests.
 
 Para relatar uma vulnerabilidade, use um canal privado do responsável pelo

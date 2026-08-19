@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import cv2
 from screeninfo import get_monitors
@@ -6,16 +6,33 @@ from screeninfo import get_monitors
 from src.logger import logger
 from src.utils.image import ImageUtils
 
-monitor_window = get_monitors()[0]
+# Fallback used in headless environments (e.g. server/Docker) where no
+# physical display is attached and screeninfo can't enumerate monitors.
+FALLBACK_WINDOW_WIDTH = 1366
+FALLBACK_WINDOW_HEIGHT = 768
+
+
+def _detect_window_size() -> tuple[int, int]:
+    try:
+        monitor_window = get_monitors()[0]
+        return monitor_window.width, monitor_window.height
+    except Exception:
+        return FALLBACK_WINDOW_WIDTH, FALLBACK_WINDOW_HEIGHT
 
 
 @dataclass
 class ImageMetrics:
     # TODO: Move TEXT_SIZE, etc here and find a better class name
-    window_width, window_height = monitor_window.width, monitor_window.height
+    window_width: int = field(default=0)
+    window_height: int = field(default=0)
     # for positioning image windows
-    window_x, window_y = 0, 0
-    reset_pos = [0, 0]
+    window_x: int = 0
+    window_y: int = 0
+    reset_pos: list = field(default_factory=lambda: [0, 0])
+
+    def __post_init__(self):
+        if not self.window_width or not self.window_height:
+            self.window_width, self.window_height = _detect_window_size()
 
 
 class InteractionUtils:

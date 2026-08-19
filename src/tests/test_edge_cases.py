@@ -1,8 +1,14 @@
 import os
 from pathlib import Path
+from types import SimpleNamespace
 
+import cv2
+import numpy as np
 import pandas as pd
 
+from src.core import ImageInstanceOps
+from src.defaults.config import CONFIG_DEFAULTS
+from src.template import Bubble
 from src.tests.test_samples.sample2.boilerplate import (
     CONFIG_BOILERPLATE,
     TEMPLATE_BOILERPLATE,
@@ -100,3 +106,41 @@ def test_different_bubble_dimensions(mocker):
         output_data[unequal_columns].iloc[0].to_list()
         == original_output_data[unequal_columns].iloc[0].to_list()
     )
+
+
+def test_oversized_mark_outside_exact_bubble_is_still_detected():
+    ops = ImageInstanceOps(CONFIG_DEFAULTS)
+
+    image = np.full((80, 120), 255, dtype=np.uint8)
+
+    # The ink frame sits outside the exact bubble box, but inside the
+    # padded measurement window.
+    cv2.rectangle(image, (14, 14), (46, 46), 0, thickness=-1)
+    cv2.rectangle(image, (20, 20), (40, 40), 255, thickness=-1)
+
+    bubble_a = Bubble([20, 20], "q1", "QTYPE_MCQ4", "A")
+    bubble_b = Bubble([52, 20], "q1", "QTYPE_MCQ4", "B")
+
+    field_block = SimpleNamespace(
+        bubble_dimensions=[20, 20],
+        bubbles_gap=32,
+        labels_gap=40,
+        direction="horizontal",
+        shift=0,
+        name="QUESTION_1",
+        origin=[20, 20],
+        dimensions=[52, 20],
+        empty_val="",
+        traverse_bubbles=[[bubble_a, bubble_b]],
+    )
+
+    template = SimpleNamespace(
+        page_dimensions=[120, 80],
+        field_blocks=[field_block],
+        custom_labels={},
+        non_custom_labels=["q1"],
+    )
+
+    detected, *_rest = ops.read_omr_response(template, image, "synthetic")
+
+    assert detected["q1"] == "A"

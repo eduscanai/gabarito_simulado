@@ -1,17 +1,17 @@
 # Guia de uso
 
-## Criar uma avaliação
+## Criar um simulado
 
 1. abra a página inicial;
-2. clique em **Criar avaliação**;
+2. clique em **Criar simulado**;
 3. informe título, quantidade de questões, alternativas e gabarito;
 4. escolha peso uniforme ou peso por questão;
 5. informe o valor total da prova;
-6. salve a avaliação.
+6. salve o simulado.
 
 ## Imprimir a folha
 
-Na página da avaliação, clique em **Folha**. Todas as folhas possuem:
+Na página do simulado, clique em **Folha**. Todas as folhas possuem:
 
 - quatro marcadores de alinhamento;
 - campo de nome;

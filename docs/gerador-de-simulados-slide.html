@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gerador de Simulados - Apresentacao</title>
+  <style>
+    :root {
+      --ink: #17201b;
+      --muted: #526157;
+      --paper: #fffdf7;
+      --line: #d8dfd2;
+      --green: #1f7a4d;
+      --green-soft: #dff2e5;
+      --gold: #c68a1a;
+      --gold-soft: #fff0c2;
+      --blue: #26758d;
+      --blue-soft: #ddf1f5;
+      --red: #b95842;
+      --red-soft: #fde7df;
+      --charcoal: #243029;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-snap-type: y mandatory;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(135deg, rgba(31, 122, 77, .14), transparent 34%),
+        linear-gradient(315deg, rgba(198, 138, 26, .18), transparent 36%),
+        #eef3ee;
+      color: var(--ink);
+      font-family: "Aptos Display", "Trebuchet MS", "Segoe UI", sans-serif;
+    }
+
+    .deck {
+      display: grid;
+      gap: 28px;
+      padding: 28px;
+      place-items: center;
+    }
+
+    .slide {
+      width: min(1280px, calc(100vw - 56px));
+      aspect-ratio: 16 / 9;
+      min-height: 720px;
+      padding: 48px 58px;
+      background:
+        linear-gradient(90deg, rgba(31, 122, 77, .08) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(31, 122, 77, .07) 1px, transparent 1px),
+        var(--paper);
+      background-size: 34px 34px;
+      border: 1px solid rgba(23, 32, 27, .12);
+      box-shadow: 0 30px 90px rgba(38, 47, 41, .18);
+      overflow: hidden;
+      position: relative;
+      scroll-snap-align: start;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 2px solid rgba(31, 122, 77, .16);
+      pointer-events: none;
+    }
+
+    .slide-number {
+      position: absolute;
+      right: 58px;
+      bottom: 30px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--green);
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 850px;
+      font-size: 68px;
+      line-height: .95;
+    }
+
+    h2 {
+      max-width: 860px;
+      font-size: 48px;
+      line-height: 1;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 21px;
+      line-height: 1.38;
+    }
+
+    .lead {
+      max-width: 780px;
+      margin-top: 18px;
+      font-size: 25px;
+    }
+
+    .cover {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 44px;
+      align-items: center;
+    }
+
+    .cover-card {
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .78);
+    }
+
+    .mock-sheet {
+      aspect-ratio: 3 / 4;
+      background: #fff;
+      border: 2px solid var(--charcoal);
+      border-radius: 6px;
+      padding: 28px;
+      display: grid;
+      gap: 18px;
+      position: relative;
+    }
+
+    .marker {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 7px solid #111;
+      background: #fff;
+    }
+
+    .marker:nth-child(1) { top: 14px; left: 14px; }
+    .marker:nth-child(2) { top: 14px; right: 14px; }
+    .marker:nth-child(3) { bottom: 14px; left: 14px; }
+    .marker:nth-child(4) { bottom: 14px; right: 14px; }
+
+    .sheet-title {
+      margin-top: 26px;
+      height: 22px;
+      width: 70%;
+      background: var(--green-soft);
+      border-radius: 4px;
+    }
+
+    .sheet-field {
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+    }
+
+    .bubbles {
+      display: grid;
+      gap: 12px;
+    }
+
+    .bubble-row {
+      display: grid;
+      grid-template-columns: 34px repeat(5, 1fr);
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bubble-row span:first-child {
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .bubble {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--charcoal);
+      border-radius: 50%;
+      justify-self: center;
+    }
+
+    .bubble.filled {
+      background: var(--charcoal);
+    }
+
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+      display: grid;
+      gap: 18px;
+      margin-top: 34px;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .card {
+      min-height: 168px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .82);
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 28px;
+      line-height: 1.05;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .card span,
+    .card li {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.34;
+    }
+
+    ul {
+      margin: 14px 0 0;
+      padding-left: 20px;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .accent-green { background: var(--green-soft); }
+    .accent-gold { background: var(--gold-soft); }
+    .accent-blue { background: var(--blue-soft); }
+    .accent-red { background: var(--red-soft); }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 38px;
+    }
+
+    .step {
+      min-height: 280px;
+      padding: 22px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .86);
+      position: relative;
+    }
+
+    .step::after {
+      content: "";
+      position: absolute;
+      top: 42px;
+      right: -18px;
+      width: 20px;
+      height: 2px;
+      background: var(--line);
+    }
+
+    .step:last-child::after {
+      display: none;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--green);
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .feature-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .feature {
+      min-height: 96px;
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .82);
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 26px;
+      font-weight: 900;
+    }
+
+    .feature strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 21px;
+    }
+
+    .feature span {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-top: 34px;
+    }
+
+    .lane {
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .82);
+    }
+
+    .lane h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 34px;
+    }
+
+    .metric-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 38px;
+    }
+
+    .metric {
+      padding: 18px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .84);
+      border: 1px solid var(--line);
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--green);
+      font-size: 34px;
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .closing {
+      display: grid;
+      grid-template-columns: 1fr .9fr;
+      gap: 36px;
+      align-items: center;
+      height: 100%;
+      padding-bottom: 24px;
+    }
+
+    .next-box {
+      padding: 28px;
+      border-radius: 8px;
+      background: var(--charcoal);
+      color: #fff;
+    }
+
+    .next-box h3,
+    .next-box p,
+    .next-box li {
+      color: #fff;
+    }
+
+    .next-box h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 34px;
+    }
+
+    footer {
+      position: absolute;
+      left: 58px;
+      right: 58px;
+      bottom: 30px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    @media print {
+      @page {
+        size: 16in 9in;
+        margin: 0;
+      }
+
+      html {
+        scroll-snap-type: none;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      .deck {
+        display: block;
+        padding: 0;
+      }
+
+      .slide {
+        width: 16in;
+        height: 9in;
+        min-height: 0;
+        box-shadow: none;
+        border: 0;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-label="Apresentacao do Gerador de Simulados">
+    <section class="slide cover">
+      <div>
+        <p class="eyebrow">Gerador de Simulados</p>
+        <h1>Simulados objetivos, folhas OMR e correcao automatizada</h1>
+        <p class="lead">
+          Uma aplicacao local para criar provas, gerar folhas de resposta,
+          corrigir marcacoes e organizar resultados por aluno.
+        </p>
+      </div>
+      <div class="cover-card">
+        <div class="mock-sheet" aria-label="Representacao de folha de respostas">
+          <span class="marker"></span>
+          <span class="marker"></span>
+          <span class="marker"></span>
+          <span class="marker"></span>
+          <div class="sheet-title"></div>
+          <div class="sheet-field"></div>
+          <div class="bubbles">
+            <div class="bubble-row"><span>01</span><i class="bubble"></i><i class="bubble filled"></i><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i></div>
+            <div class="bubble-row"><span>02</span><i class="bubble"></i><i class="bubble"></i><i class="bubble filled"></i><i class="bubble"></i><i class="bubble"></i></div>
+            <div class="bubble-row"><span>03</span><i class="bubble filled"></i><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i></div>
+            <div class="bubble-row"><span>04</span><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i><i class="bubble filled"></i><i class="bubble"></i></div>
+            <div class="bubble-row"><span>05</span><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i><i class="bubble filled"></i></div>
+          </div>
+        </div>
+      </div>
+      <span class="slide-number">01 / 08</span>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Oportunidade</p>
+      <h2>Corrigir simulados ainda consome tempo demais</h2>
+      <p class="lead">
+        Em turmas com muitos alunos, o gargalo nao esta em aplicar a prova:
+        esta em gerar folhas consistentes, identificar alunos e conferir cada resposta.
+      </p>
+      <div class="grid-3">
+        <article class="card accent-red">
+          <strong>Processo manual</strong>
+          <span>Marcacoes precisam ser conferidas uma a uma, abrindo espaco para erro humano.</span>
+        </article>
+        <article class="card accent-gold">
+          <strong>Baixa rastreabilidade</strong>
+          <span>Folhas, notas e arquivos corrigidos ficam espalhados em pastas ou planilhas.</span>
+        </article>
+        <article class="card accent-blue">
+          <strong>Lote dificil</strong>
+          <span>Quando chegam muitos PDFs ou imagens, separar aluno por aluno vira trabalho operacional.</span>
+        </article>
+      </div>
+      <footer>Proposta: transformar criacao, impressao, leitura e resultado em um fluxo unico.</footer>
+      <span class="slide-number">02 / 08</span>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Solucao</p>
+      <h2>Um gerador completo para simulados objetivos</h2>
+      <p class="lead">
+        O sistema combina interface web, geracao de PDFs, leitura OMR,
+        reconhecimento de matricula e armazenamento local dos resultados.
+      </p>
+      <div class="metric-strip">
+        <div class="metric"><strong>2-5</strong><span>alternativas por questao</span></div>
+        <div class="metric"><strong>100</strong><span>questoes por simulado</span></div>
+        <div class="metric"><strong>PDF</strong><span>folhas prontas para impressao</span></div>
+        <div class="metric"><strong>Local</strong><span>dados no computador da escola</span></div>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <strong>Controle pedagogico</strong>
+          <span>Titulo, numero de questoes, gabarito, pesos e nota total sao definidos antes da impressao.</span>
+        </article>
+        <article class="card">
+          <strong>Controle operacional</strong>
+          <span>O sistema organiza alunos, folhas anexadas, imagens processadas, notas e detalhes por questao.</span>
+        </article>
+      </div>
+      <span class="slide-number">03 / 08</span>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Fluxo principal</p>
+      <h2>Do gabarito ao resultado em quatro etapas</h2>
+      <div class="flow">
+        <article class="step">
+          <div class="step-number">1</div>
+          <h3>Criar simulado</h3>
+          <p>Defina titulo, quantidade de questoes, alternativas, pesos, nota total e gabarito oficial.</p>
+        </article>
+        <article class="step">
+          <div class="step-number">2</div>
+          <h3>Gerar folhas</h3>
+          <p>Baixe folha resposta, folha em branco com matricula, solucao em PDF e pacote OMR.</p>
+        </article>
+        <article class="step">
+          <div class="step-number">3</div>
+          <h3>Anexar respostas</h3>
+          <p>Envie arquivos por aluno ou processe varias paginas de uma vez na correcao em lote.</p>
+        </article>
+        <article class="step">
+          <div class="step-number">4</div>
+          <h3>Corrigir</h3>
+          <p>O sistema le marcacoes, calcula nota, registra resultado e separa casos duvidosos.</p>
+        </article>
+      </div>
+      <span class="slide-number">04 / 08</span>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Criacao e materiais</p>
+      <h2>Tudo que o professor precisa para preparar o simulado</h2>
+      <div class="feature-row">
+        <div class="feature">
+          <div class="icon">1</div>
+          <div><strong>Gabarito configuravel</strong><span>Escolha a alternativa correta em cada questao e acompanhe pendencias antes de salvar.</span></div>
+        </div>
+        <div class="feature">
+          <div class="icon">2</div>
+          <div><strong>Pesos por questao</strong><span>Use peso uniforme ou personalize o peso de cada item, com nota total definida.</span></div>
+        </div>
+        <div class="feature">
+          <div class="icon">3</div>
+          <div><strong>Folha resposta</strong><span>PDF A4 com marcadores de alinhamento e bolhas OMR para impressao.</span></div>
+        </div>
+        <div class="feature">
+          <div class="icon">4</div>
+          <div><strong>Folha em branco</strong><span>Modelo com nome, matricula em blocos e alternativas para os alunos preencherem.</span></div>
+        </div>
+        <div class="feature">
+          <div class="icon">5</div>
+          <div><strong>Solucao em PDF</strong><span>Versao com respostas corretas preenchidas para conferencia e arquivo pedagogico.</span></div>
+        </div>
+        <div class="feature">
+          <div class="icon">6</div>
+          <div><strong>Pacote tecnico</strong><span>Template, configuracao, gabarito JSON e arquivos OMR ficam juntos no ZIP.</span></div>
+        </div>
+      </div>
+      <span class="slide-number">05 / 08</span>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Correcao</p>
+      <h2>Duas formas de anexar respostas dos alunos</h2>
+      <div class="comparison">
+        <article class="lane">
+          <h3>Individual</h3>
+          <p>Ideal para corrigir ou substituir a folha de um aluno especifico.</p>
+          <ul>
+            <li>Seleciona o aluno na lista.</li>
+            <li>Anexa PDF, PNG, JPG ou JPEG.</li>
+            <li>Resultado aparece na ficha do aluno.</li>
+            <li>Guarda folha original e imagem processada.</li>
+          </ul>
+        </article>
+        <article class="lane">
+          <h3>Em lote</h3>
+          <p>Ideal para processar varios alunos de uma turma na mesma operacao.</p>
+          <ul>
+            <li>Aceita varios arquivos ou PDF com varias paginas.</li>
+            <li>Le a matricula escrita nos blocos.</li>
+            <li>Associa automaticamente ao aluno correto.</li>
+            <li>Envia casos duvidosos para revisao.</li>
+          </ul>
+        </article>
+      </div>
+      <footer>O mesmo simulado pode receber correcao individual e em lote conforme a rotina da escola.</footer>
+      <span class="slide-number">06 / 08</span>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Leitura e resultados</p>
+      <h2>OMR para respostas, OCR para matricula, dados locais para gestao</h2>
+      <div class="grid-3">
+        <article class="card accent-green">
+          <strong>Leitura OMR</strong>
+          <span>Detecta alternativas preenchidas, inclusive marcacoes maiores que a bolinha.</span>
+        </article>
+        <article class="card accent-blue">
+          <strong>OCR da matricula</strong>
+          <span>Reconhece os algarismos escritos nos blocos e localiza o aluno no cadastro.</span>
+        </article>
+        <article class="card accent-gold">
+          <strong>Resultado detalhado</strong>
+          <span>Mostra nota, percentual, acertos, erros, brancos e resposta correta por questao.</span>
+        </article>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <strong>Arquivos organizados</strong>
+          <span>Folha original, folha processada, resultado JSON e relatorios ficam vinculados ao simulado.</span>
+        </article>
+        <article class="card">
+          <strong>Privacidade e autonomia</strong>
+          <span>Processamento local com FastAPI, Tesseract, OMRChecker e SQLite, sem depender de nuvem.</span>
+        </article>
+      </div>
+      <span class="slide-number">07 / 08</span>
+    </section>
+
+    <section class="slide">
+      <div class="closing">
+        <div>
+          <p class="eyebrow">Valor para a operacao</p>
+          <h2>Menos tempo corrigindo, mais tempo analisando desempenho</h2>
+          <p class="lead">
+            O Gerador de Simulados reduz trabalho repetitivo, padroniza folhas,
+            acelera a correcao e deixa os resultados prontos para acompanhamento.
+          </p>
+        </div>
+        <div class="next-box">
+          <h3>Resumo executivo</h3>
+          <ul>
+            <li>Cria simulados objetivos com gabarito e pesos.</li>
+            <li>Gera folhas e solucao em PDF.</li>
+            <li>Corrige uploads individuais ou em lote.</li>
+            <li>Identifica matricula e organiza resultados por aluno.</li>
+            <li>Mantem tudo armazenado localmente.</li>
+          </ul>
+        </div>
+      </div>
+      <footer>Gerador de Simulados - pronto para demonstracao e validacao com folhas fisicas.</footer>
+      <span class="slide-number">08 / 08</span>
+    </section>
+  </main>
+</body>
+</html>

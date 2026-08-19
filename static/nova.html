@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Criador de avaliações OMR</title>
+  <title>Gerador de Simulados</title>
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
   <header class="topbar">
-    <a class="home-link" href="/">← Avaliações</a>
+    <a class="home-link" href="/">← Simulados</a>
     <div class="brand-copy">
-      <p class="eyebrow">OMRChecker</p>
-      <h1>Criar avaliação objetiva</h1>
+      <p class="eyebrow">Gerador de Simulados</p>
+      <h1>Criar simulado objetivo</h1>
       <p class="subtitle">Defina o gabarito e gere a folha de respostas para anexar à prova.</p>
     </div>
     <span class="status-badge" id="statusBadge">Rascunho</span>
@@ -34,7 +34,7 @@
           <span class="corner-marker bottom-left"></span>
           <span class="corner-marker bottom-right"></span>
 
-          <h2 id="previewTitle">Nova avaliação</h2>
+          <h2 id="previewTitle">Novo simulado</h2>
 
           <div class="student-fields">
             <span>Nome: ____________________________________</span>
@@ -60,7 +60,7 @@
 
       <div class="form-grid">
         <label class="field wide">
-          <span>Título da avaliação</span>
+          <span>Título do simulado</span>
           <input id="titleInput" type="text" placeholder="Ex.: Cálculo I — Prova 1">
         </label>
 
@@ -105,7 +105,7 @@
         <div id="questionsGrid" class="questions-grid"></div>
 
         <section id="resultsPanel" class="results-panel" hidden>
-          <h3>Avaliação criada</h3>
+          <h3>Simulado criado</h3>
           <p id="resultId"></p>
           <div class="download-grid">
             <a id="downloadSheet" target="_blank" rel="noopener">Folha para imprimir</a>
@@ -113,7 +113,7 @@
             <a id="downloadZip">Pacote completo</a>
             <a id="downloadKey" target="_blank" rel="noopener">Gabarito JSON</a>
             <a id="downloadTemplate" target="_blank" rel="noopener">Template OMR</a>
-            <a id="openAssessment" class="primary-link">Abrir página da avaliação</a>
+            <a id="openAssessment" class="primary-link">Abrir página do simulado</a>
           </div>
         </section>
       </div>

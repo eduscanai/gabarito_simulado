@@ -48,7 +48,7 @@ async def lifespan(application: FastAPI):
 
     if migration.get("errors"):
         logger.warning(
-            "Algumas avaliações não foram importadas: %s",
+            "Alguns simulados não foram importados: %s",
             migration["errors"],
         )
 
@@ -56,7 +56,7 @@ async def lifespan(application: FastAPI):
 
 
 app = FastAPI(
-    title="Criador de avaliações OMR",
+    title="Gerador de Simulados",
     lifespan=lifespan,
 )
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
@@ -70,11 +70,14 @@ CARD_HEIGHT_MM = 200
 BUBBLE_SIZE = 34
 MARKER_RATIO = 17
 STUDENT_ID_DIGITS = 10
-STUDENT_ID_ORIGIN = [352, 220]
+STUDENT_ID_ORIGIN = [250, 232]
+STUDENT_ID_BLOCK_WIDTH = 70
+STUDENT_ID_BLOCK_HEIGHT = 62
+STUDENT_ID_BLOCK_GAP = 14
 STUDENT_ID_BUBBLE_GAP = 34
 STUDENT_ID_LABEL_GAP = 46
 BATCH_QUESTION_TOP = 390
-BATCH_TEMPLATE_VERSION = 4
+BATCH_TEMPLATE_VERSION = 5
 
 
 def slugify(value: str) -> str:
@@ -103,10 +106,10 @@ def validate_payload(
             raw_total_score = 10
 
     if not title:
-        raise HTTPException(400, "Informe o título da avaliação.")
+        raise HTTPException(400, "Informe o título do simulado.")
 
     if not isinstance(questions, list) or not 1 <= len(questions) <= 100:
-        raise HTTPException(400, "A avaliação deve ter entre 1 e 100 questões.")
+        raise HTTPException(400, "O simulado deve ter entre 1 e 100 questões.")
 
     try:
         total_score = float(raw_total_score)
@@ -435,11 +438,10 @@ def draw_answer_sheet(
     bubble_radius_y = (BUBBLE_SIZE / 2 - 3) * scale_y
 
     if student_id_digits and not show_answers:
-        block_width = 70
-        block_height = 62
-        block_gap = 14
-        origin_x = 250
-        origin_y = 232
+        block_width = STUDENT_ID_BLOCK_WIDTH
+        block_height = STUDENT_ID_BLOCK_HEIGHT
+        block_gap = STUDENT_ID_BLOCK_GAP
+        origin_x, origin_y = STUDENT_ID_ORIGIN
 
         for column in range(student_id_digits):
             block_x = origin_x + column * (block_width + block_gap)
@@ -529,7 +531,7 @@ def ensure_batch_package(assessment_dir: Path) -> dict[str, Path]:
     questions = assessment_data.get("questions", [])
 
     if not isinstance(questions, list) or not questions:
-        raise RuntimeError("A avaliação não possui questões válidas.")
+        raise RuntimeError("O simulado não possui questões válidas.")
 
     batch_dir = assessment_dir / "pacote_lote"
     batch_dir.mkdir(parents=True, exist_ok=True)
@@ -567,7 +569,7 @@ def ensure_batch_package(assessment_dir: Path) -> dict[str, Path]:
     draw_answer_sheet(
         paths["sheet"],
         paths["marker"],
-        str(assessment_data.get("title", "Avaliação")),
+        str(assessment_data.get("title", "Simulado")),
         str(assessment_data.get("id", assessment_dir.name)),
         layout,
         student_id_digits=STUDENT_ID_DIGITS,
@@ -631,7 +633,7 @@ def locate_assessment(assessment_id: str) -> Path:
     assessment_dir = DATA_DIR / safe_id
 
     if not assessment_dir.exists() or not assessment_dir.is_dir():
-        raise HTTPException(404, "Avaliação não encontrada.")
+        raise HTTPException(404, "Simulado não encontrado.")
 
     return assessment_dir
 
@@ -640,7 +642,7 @@ def get_student_record(students_data: dict[str, Any], student_id: str) -> dict[s
     for student in students_data.get("students", []):
         if student.get("id") == student_id:
             return student
-    raise HTTPException(404, "Aluno não encontrado nesta avaliação.")
+    raise HTTPException(404, "Aluno não encontrado neste simulado.")
 
 
 def parse_omr_csv_row(results_dir: Path) -> dict[str, str]:
@@ -838,6 +840,62 @@ def _align_sheet_to_template(source_path: Path) -> Any:
     )
 
 
+def _registration_block_boxes(
+    *,
+    student_id_digits: int = STUDENT_ID_DIGITS,
+) -> list[tuple[int, int, int, int]]:
+    block_width = STUDENT_ID_BLOCK_WIDTH
+    block_height = STUDENT_ID_BLOCK_HEIGHT
+    block_gap = STUDENT_ID_BLOCK_GAP
+    origin_x, origin_y = STUDENT_ID_ORIGIN
+
+    return [
+        (
+            origin_x + index * (block_width + block_gap),
+            origin_y,
+            block_width,
+            block_height,
+        )
+        for index in range(student_id_digits)
+    ]
+
+
+def sheet_has_registration_blocks(source_path: Path) -> bool:
+    """Detect whether the uploaded sheet uses the registration-block layout."""
+    try:
+        import cv2
+        import numpy as np
+    except Exception as exc:
+        raise RuntimeError("OpenCV/NumPy indisponíveis para identificar o layout.") from exc
+
+    aligned = _align_sheet_to_template(source_path)
+    gray = cv2.cvtColor(aligned, cv2.COLOR_BGR2GRAY)
+    dark = gray < 170
+
+    matches = 0
+    strip = 5
+
+    for x, y, width, height in _registration_block_boxes():
+        top = dark[max(0, y - strip): min(PAGE_HEIGHT, y + strip), x: x + width]
+        bottom = dark[
+            max(0, y + height - strip): min(PAGE_HEIGHT, y + height + strip),
+            x: x + width,
+        ]
+        left = dark[y: y + height, max(0, x - strip): min(PAGE_WIDTH, x + strip)]
+        right = dark[
+            y: y + height,
+            max(0, x + width - strip): min(PAGE_WIDTH, x + width + strip),
+        ]
+
+        horizontal_border = max(float(np.mean(top)), float(np.mean(bottom)))
+        vertical_border = max(float(np.mean(left)), float(np.mean(right)))
+
+        if horizontal_border >= 0.035 and vertical_border >= 0.025:
+            matches += 1
+
+    return matches >= 7
+
+
 def _ocr_single_digit(crop: Any, work_dir: Path, index: int) -> tuple[str, float]:
     """Recognize one handwritten digit with Tesseract and a digit whitelist."""
     try:
@@ -936,11 +994,10 @@ def recognize_registration_from_blocks(
     aligned_path = work_dir / "folha_alinhada.png"
     cv2.imwrite(str(aligned_path), aligned)
 
-    block_width = 70
-    block_height = 62
-    block_gap = 14
-    origin_x = 250
-    origin_y = 232
+    block_width = STUDENT_ID_BLOCK_WIDTH
+    block_height = STUDENT_ID_BLOCK_HEIGHT
+    block_gap = STUDENT_ID_BLOCK_GAP
+    origin_x, origin_y = STUDENT_ID_ORIGIN
 
     digits: list[str] = []
     ink_ratios: list[float] = []
@@ -1157,15 +1214,31 @@ def process_student_sheet(
     student_id: str,
     source_path: Path,
 ) -> dict[str, Any]:
-    omr_package = assessment_dir / "pacote_omr"
+    has_registration_blocks = sheet_has_registration_blocks(source_path)
+
+    if has_registration_blocks:
+        batch_package = ensure_batch_package(assessment_dir)
+        omr_sources = {
+            "template.json": batch_package["template"],
+            "config.json": batch_package["config"],
+            "omr_marker.jpg": batch_package["marker"],
+        }
+        sheet_layout = "registration_blocks"
+    else:
+        omr_package = assessment_dir / "pacote_omr"
+        omr_sources = {
+            filename: omr_package / filename
+            for filename in ("template.json", "config.json", "omr_marker.jpg")
+        }
+        sheet_layout = "plain_answers"
+
     run_root = assessment_dir / "_processing" / student_id / uuid.uuid4().hex
     input_dir = run_root / "input"
     output_dir = run_root / "output"
     input_dir.mkdir(parents=True)
     output_dir.mkdir(parents=True)
 
-    for filename in ("template.json", "config.json", "omr_marker.jpg"):
-        source = omr_package / filename
+    for filename, source in omr_sources.items():
         if not source.exists():
             raise RuntimeError(f"Pacote OMR incompleto: {filename}.")
         shutil.copy2(source, input_dir / filename)
@@ -1259,6 +1332,7 @@ def process_student_sheet(
         )
 
     graded["processed_image"] = processed_image_relative
+    graded["sheet_layout"] = sheet_layout
     graded["log_excerpt"] = (completed.stdout or "")[-1800:]
 
     shutil.rmtree(run_root, ignore_errors=True)
@@ -1456,7 +1530,7 @@ async def list_assessments() -> dict[str, Any]:
     except OSError as exc:
         raise HTTPException(
             500,
-            f"Não foi possível acessar a pasta de avaliações: {exc}",
+            f"Não foi possível acessar a pasta de simulados: {exc}",
         ) from exc
 
     for assessment_dir in directory_entries:
@@ -1509,7 +1583,7 @@ async def list_assessments() -> dict[str, Any]:
         assessments.append(
             {
                 "id": assessment.get("id", assessment_dir.name),
-                "title": assessment.get("title", "Avaliação sem título"),
+                "title": assessment.get("title", "Simulado sem título"),
                 "created_at": assessment.get("created_at"),
                 "question_count": assessment.get("question_count", 0),
                 "points_per_question": assessment.get("points_per_question", 0),
@@ -1670,7 +1744,7 @@ async def create_assessment(
             "details": sync_assessment_directory(assessment_dir),
         }
     except Exception as exc:
-        logger.exception("Falha ao sincronizar avaliação no SQLite.")
+        logger.exception("Falha ao sincronizar simulado no SQLite.")
         database_sync = {
             "ok": False,
             "error": str(exc),
@@ -1678,7 +1752,7 @@ async def create_assessment(
 
     return {
         "id": assessment_id,
-        "message": "Avaliação criada corretamente.",
+        "message": "Simulado criado corretamente.",
         "database_sync": database_sync,
         "details_url": f"/avaliacoes/{assessment_id}",
         "downloads": {
@@ -1707,7 +1781,7 @@ async def get_assessment(assessment_id: str) -> dict[str, Any]:
 
     students_path = assessment_dir / "alunos.json"
 
-    # Migração automática para avaliações criadas em versões anteriores.
+    # Migração automática para simulados criados em versões anteriores.
     if not students_path.exists():
         create_students_file(students_path)
 

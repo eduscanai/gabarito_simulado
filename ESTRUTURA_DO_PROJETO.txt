@@ -1,4 +1,4 @@
-corretor-omr-local/
+gerador-de-simulados/
 ├── .github/
 │   ├── ISSUE_TEMPLATE/
 │   ├── workflows/python-check.yml

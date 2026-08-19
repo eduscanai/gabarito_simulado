@@ -3,23 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Avaliações OMR</title>
+  <title>Gerador de Simulados</title>
   <link rel="stylesheet" href="/static/dashboard.css">
 </head>
 <body>
   <header class="topbar">
     <div>
-      <p class="eyebrow">OMRChecker</p>
-      <h1>Avaliações</h1>
-      <p class="subtitle">Crie avaliações, acompanhe correções e consulte os resultados.</p>
+      <p class="eyebrow">Gerador de Simulados</p>
+      <h1>Gerador de Simulados</h1>
+      <p class="subtitle">Crie simulados, acompanhe correções e consulte os resultados.</p>
     </div>
-    <a class="new-button" href="/nova">+ Nova avaliação</a>
+    <a class="new-button" href="/nova">+ Novo simulado</a>
   </header>
 
   <main class="dashboard">
     <section class="summary-grid">
       <article class="summary-card">
-        <span>Avaliações</span>
+        <span>Simulados</span>
         <strong id="totalAssessments">—</strong>
       </article>
       <article class="summary-card">
@@ -39,17 +39,17 @@
     <section class="panel">
       <div class="panel-header">
         <div>
-          <h2>Avaliações criadas</h2>
-          <p>Abra uma avaliação para anexar as folhas e acompanhar os resultados.</p>
+          <h2>Simulados criados</h2>
+          <p>Abra um simulado para anexar as folhas e acompanhar os resultados.</p>
         </div>
 
         <div class="panel-actions">
           <label class="search-field">
             <span>Buscar</span>
-            <input id="assessmentSearch" type="search" placeholder="Título da avaliação">
+            <input id="assessmentSearch" type="search" placeholder="Título do simulado">
           </label>
 
-          <select id="statusFilter" aria-label="Filtrar avaliações">
+          <select id="statusFilter" aria-label="Filtrar simulados">
             <option value="all">Todas</option>
             <option value="pending">Com pendências</option>
             <option value="completed">Todas corrigidas</option>
@@ -60,21 +60,21 @@
 
       <div id="loadingState" class="state-box">
         <div class="spinner"></div>
-        <strong>Carregando avaliações...</strong>
+        <strong>Carregando simulados...</strong>
       </div>
 
       <div id="errorState" class="state-box error-state" hidden>
         <div class="error-icon">!</div>
-        <strong>Não foi possível carregar as avaliações</strong>
+        <strong>Não foi possível carregar os simulados</strong>
         <span id="errorMessage">Verifique se o servidor foi reiniciado corretamente.</span>
         <button id="retryButton" type="button">Tentar novamente</button>
       </div>
 
       <div id="emptyState" class="state-box" hidden>
         <div class="empty-icon">+</div>
-        <strong>Nenhuma avaliação criada</strong>
-        <span>Crie a primeira avaliação para gerar a folha de respostas.</span>
-        <a href="/nova">Criar avaliação</a>
+        <strong>Nenhum simulado criado</strong>
+        <span>Crie o primeiro simulado para gerar a folha de respostas.</span>
+        <a href="/nova">Criar simulado</a>
       </div>
 
       <div id="assessmentsGrid" class="assessments-grid" hidden></div>

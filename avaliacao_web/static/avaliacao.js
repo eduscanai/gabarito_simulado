@@ -106,8 +106,8 @@ function filteredStudents() {
 function renderSummary() {
   const { assessment, summary } = state.data;
 
-  el.assessmentTitle.textContent = assessment.title || "Avaliação";
-  document.title = `${assessment.title || "Avaliação"} — Avaliação`;
+  el.assessmentTitle.textContent = assessment.title || "Simulado";
+  document.title = `${assessment.title || "Simulado"} — Simulado`;
 
   el.questionCount.textContent = assessment.question_count ?? 0;
   el.studentCount.textContent = summary.total_students ?? 0;
@@ -287,7 +287,7 @@ function renderStudentInfo(student) {
   } else {
     el.attachedFileName.textContent = "Nenhuma folha anexada";
     el.attachedFileDescription.textContent =
-      "Anexe um PDF, PNG, JPG ou JPEG para corrigir esta avaliação.";
+      "Anexe um PDF, PNG, JPG ou JPEG para corrigir este simulado.";
     el.openOriginalFile.hidden = true;
   }
 
@@ -386,7 +386,7 @@ async function fetchJsonWithTimeout(url, options = {}, timeoutMs = 15000) {
 
     if (!response.ok) {
       throw new Error(
-        result.detail || `Erro ${response.status} ao acessar a avaliação.`
+        result.detail || `Erro ${response.status} ao acessar o simulado.`
       );
     }
 
@@ -530,7 +530,7 @@ async function uploadSheet(student, file, label, labelText) {
 
 async function refreshData(renderCurrent = true) {
   if (!state.assessmentId) {
-    throw new Error("Identificador da avaliação não encontrado no endereço.");
+    throw new Error("Identificador do simulado não encontrado no endereço.");
   }
 
   const result = await fetchJsonWithTimeout(
@@ -543,7 +543,7 @@ async function refreshData(renderCurrent = true) {
     || !result.summary
     || !result.downloads
   ) {
-    throw new Error("Os dados retornados pela avaliação estão incompletos.");
+    throw new Error("Os dados retornados pelo simulado estão incompletos.");
   }
 
   state.data = result;
@@ -571,9 +571,9 @@ async function loadPage() {
     await refreshData();
     setPageState("content");
   } catch (error) {
-    el.assessmentTitle.textContent = "Erro ao carregar avaliação";
+    el.assessmentTitle.textContent = "Erro ao carregar simulado";
     el.pageErrorMessage.textContent =
-      error.message || "Erro desconhecido ao carregar a avaliação.";
+      error.message || "Erro desconhecido ao carregar o simulado.";
     setPageState("error");
     showToast(el.pageErrorMessage.textContent, "error");
   } finally {

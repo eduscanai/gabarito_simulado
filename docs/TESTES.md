@@ -14,7 +14,7 @@ substituem o teste físico do scanner e do OCR.
 
 ## Teste físico mínimo
 
-1. crie uma avaliação com cinco questões;
+1. crie uma simulado com cinco questões;
 2. imprima três folhas;
 3. use três matrículas fictícias;
 4. preencha respostas conhecidas;

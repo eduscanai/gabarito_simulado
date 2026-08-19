@@ -13,9 +13,9 @@ avaliacao_web/data/corretor.db
 - `students`: alunos;
 - `classes`: turmas;
 - `class_students`: vínculo entre turma e aluno;
-- `assessments`: avaliações;
+- `assessments`: simulados;
 - `questions`: questões e gabarito;
-- `assessment_students`: vínculo entre avaliação e aluno;
+- `assessment_students`: vínculo entre simulado e aluno;
 - `submissions`: folhas enviadas;
 - `results`: resultado geral;
 - `detected_answers`: respostas detectadas por questão.
@@ -34,7 +34,7 @@ protegidos pelas restrições de unicidade.
 ## Estado atual
 
 O banco ainda não é a única fonte de verdade. Parte da interface lê os arquivos
-JSON das avaliações e sincroniza o SQLite. Isso preserva compatibilidade com as
+JSON dos simulados e sincroniza o SQLite. Isso preserva compatibilidade com as
 versões anteriores enquanto a migração é concluída.
 
 ## Backup
